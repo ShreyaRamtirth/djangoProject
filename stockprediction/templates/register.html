@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+{% if not request.user.is_authenticated %}
+<h2>Register</h2>
+<form method="post">
+  {% csrf_token %}
+  {% if error %}
+    {{error}}
+  {% endif %}
+ {{ form.username }}
+ {{ form.email }}
+ {{ form.password1 }}
+ {{ form.password2 }}
+ {{ form.phone }}
+  <button type="submit">Register</button>
+</form>
+{% else %}
+<p>You are already login please <a href="{% url 'logout' %}">logout</a></p>
+{% endif %}
+{% endblock %}

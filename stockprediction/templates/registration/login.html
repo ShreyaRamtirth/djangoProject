@@ -1,0 +1,203 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Login</title>
+      {% load static %}
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous"
+      />
+      <link rel="stylesheet" href="{% static '/css/login.css' %}" />
+      <script
+        src="https://kit.fontawesome.com/651ff6f856.js"
+        crossorigin="anonymous"
+      ></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   
+    </head>
+    <body>
+      {% if error %}
+      <div class="alert alert-primary text-center {display}" id="result" role="alert">
+        {{error}}
+      </div>
+      {% endif %}
+
+      {% if not request.user.is_authenticated %}
+  
+      <div class="login-container mt-5">
+        <div class="container" id="container">
+          <div class="form-container sign-up-container">
+            <form
+              onsubmit="return validateForm();"
+              method="post"
+            >
+              {% csrf_token %}
+              <h3>Create Account</h3>
+             {{ form.username }}
+              <small class="fs-6 text-danger" id="errname" style="display: none"
+                >Name should contain only alphabet</small
+              >
+             {{ form.email }}
+              <small class="fs-6 text-danger" id="erremail" style="display: none"
+                >Email is Invalid</small
+              >
+             {{ form.password1 }}
+              <small class="fs-6 text-danger" id="errpass" style="display: none"
+                >Password should contain Uppercase, Lowercase & digit.</small
+              >
+              {{ form.password2 }}
+              <small class="fs-6 text-danger" id="errconfirmpass" style="display: none"
+                >Password is not matching</small
+              >
+              {{ form.phone }}
+              <small class="fs-6 text-danger" id="errphno" style="display: none"
+                >Number sould be 10 digit long</small
+              >
+              <button type="submit" class="submit mt-3" name="submit" value='sign_up'>Sign Up</button>
+            </form>
+          </div>
+          <div class="form-container sign-in-container">
+            <form method="post">
+              {% csrf_token %}
+              <h1 class="mb-5">Sign in</h1>
+              <input type="text" name="username" placeholder="Username" />
+              <input type="password" name="password" placeholder="Password" />
+           
+              <button type="submit" class="submit" name="submit" value="sign_in">
+                Sign In
+              </button>
+            </form>
+          </div>
+          <div class="overlay-container">
+            <div class="overlay">
+              <div class="overlay-panel overlay-left">
+                <h1>Welcome Back!</h1>
+                <p>
+                  To keep connected with us please login with your personal info
+                </p>
+                <button class="ghost" id="signIn">Sign In</button>
+              </div>
+              <div class="overlay-panel overlay-right">
+                <h1>Hello, Friend!</h1>
+                <p>Enter your personal details and start journey with us</p>
+                <button class="ghost" id="signUp">Sign Up</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="login-container mt-5">
+        <div class="container" id="container">
+          <div class="form-container">
+            <h5 class="mt-5 text-primary">You are already login. Please <a href="http://127.0.0.1:8000/logout" class="h5 text-danger" >Logout</a> here.</div>
+            </h5>
+            </div>
+            </div>
+      {% endif %}
+      <script>
+        const signUpButton = document.getElementById("signUp");
+        const signInButton = document.getElementById("signIn");
+        const container = document.getElementById("container");
+  
+   
+
+        signUpButton.addEventListener("click", () => {
+          container.classList.add("right-panel-active");
+        });
+  
+        signInButton.addEventListener("click", () => {
+          container.classList.remove("right-panel-active");
+        });
+
+        var form_fields = document.getElementsByTagName('input')
+        form_fields[1].placeholder = 'Username';
+        form_fields[2].placeholder = 'Email';
+        form_fields[3].placeholder = 'Enter password';
+        form_fields[4].placeholder = 'Re-enter Password';
+        form_fields[5].placeholder = 'Phone No';
+        
+        function namevalidation() {
+          var pattern = /^[A-Za-z ]{1,}$/;
+          var str = form_fields[1].value;
+          if (!pattern.test(str)) {
+            document.getElementById("errname").style.display = "block";
+            return false;
+          } else {
+            document.getElementById("errname").style.display = "none";
+            return true;
+          }
+        }
+        
+        function emailvalidation() {
+          var pattern =
+            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+          var str =  form_fields[2].value;
+          if (!pattern.test(str)) {
+            document.getElementById("erremail").style.display = "block";
+            return false;
+          } else {
+            document.getElementById("erremail").style.display = "none";
+            return true;
+          }
+        }
+        function passvalidation() {
+          var pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+          var str =  form_fields[3].value;
+          if (!pattern.test(str)) {
+            document.getElementById("errpass").style.display = "block";
+            return false;
+          } else {
+            document.getElementById("errpass").style.display = "none";
+            return true;
+          }
+        }
+        function confirmpassvalidation() {
+          if(form_fields[4].value != form_fields[3].value){
+            document.getElementById("errconfirmpass").style.display = "block";
+            return false;
+          }
+          else{
+            document.getElementById("errconfirmpass").style.display = "none";
+            return true;
+          }
+        }
+        function phvalidation() {
+          var pattern = /^[0-9]{10}$/;
+          var str =  form_fields[5].value;
+          if (!pattern.test(str)) {
+            document.getElementById("errphno").style.display = "block";
+            return false;
+          } else {
+            document.getElementById("errphno").style.display = "none";
+            return true;
+          }
+        }
+        
+        form_fields[1].addEventListener("input", ()=> namevalidation())
+        form_fields[2].addEventListener("input", ()=> emailvalidation())
+        form_fields[3].addEventListener("input", ()=> passvalidation())
+        form_fields[4].addEventListener("input", ()=> confirmpassvalidation())
+        form_fields[5].addEventListener("input", ()=> phvalidation())
+  
+        function validateForm(){
+          if( namevalidation() && emailvalidation() && phvalidation() && passvalidation() && confirmpassvalidation())
+          {
+            return true
+          }else{
+            alert("Please Validate")
+            return false
+          }
+        }
+
+     
+
+    //Query All input fields
+  
+  
+      </script>
+    </body>
+  </html>
+  

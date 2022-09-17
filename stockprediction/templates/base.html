@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stock Market Web App</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/651ff6f856.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="position-fixed">
+            <div class="sidebar-header">
+                {% load static %}
+                <img src="{% static '/images/logo.jpg' %}"
+                    width="200px" height="190px"  />
+                <h3>Stock Market Prediction</h3>
+                {% if request.user.is_authenticated %}
+                <p>Welcome, You are logged in as {{ request.user }}</p>
+                {% else %}
+                <p>Welcome, Guest</p>
+                {% endif %}
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+
+                    <a href="/" data-toggle="collapse" aria-expanded="false"><i class="fas fa-home"></i>
+                        &nbsp; Home</a>
+                </li>
+                
+                <li class="mt-2">
+                    <a href="/research"><i class="fas fa-search"></i> &nbsp; Research</a>
+                </li>
+                <li class="mt-2">
+                    <a href="/analysis"><i class="fas fa-chart-bar"></i> &nbsp; Analysis</a>
+                </li>
+                {% if not request.user.is_authenticated %}
+                <li class="mt-2">
+                    <a href="/login" data-toggle="collapse" aria-expanded="false"><i class="fas fa-sign-in-alt"></i> &nbsp; Login</a>
+                </li>
+                {% else %}
+                <li class="mt-2">
+                    <a href="/logout" data-toggle="collapse" aria-expanded="false"><i class="fas fa-sign-in-alt"></i> &nbsp; Logout</a>
+                </li>
+
+                {% endif %}
+                {% if request.user.is_superuser %}
+                <li class="mt-2">
+                    <a href="/search"><i class="fas fa-id-card"></i> &nbsp; Control Panel</a>
+                </li>
+                {% endif %}
+                
+            </ul>
+        </nav>
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+<script>
+
+$(function() {
+    switch (window.location.pathname) {
+    case '/analysis/':
+        $('.components li').removeClass('active');
+        $('.components li:nth-child(3)').addClass('active');
+        break;
+    case '/search/':
+        $('.components li').removeClass('active');
+        $('.components li:nth-child(6)').addClass('active');
+        break;
+    case '/research/':
+        $('.components li').removeClass('active');
+        $('.components li:nth-child(2)').addClass('active');
+        break;
+ }
+});
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+
+    </body>
+    </html>
